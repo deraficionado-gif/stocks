@@ -2,11 +2,11 @@ name: Daily Stock Update
 
 on:
   schedule:
-    - cron: '0 8 * * *'   # Runs daily at 08:00 UTC
-  workflow_dispatch:       # Allows manual trigger
-  push:
-    branches:
-      - main
+    - cron: '0 8 * * *'  # Runs daily at 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update-stock-data:
@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -31,9 +28,12 @@ jobs:
         run: python stocks.py
 
       - name: Commit and push CSV files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.name "github-actions"
           git config --local user.email "actions@github.com"
           git add data/*.csv
           git commit -m "Update stock CSVs" || echo "No changes to commit"
-          git push
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push origin HEAD

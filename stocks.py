@@ -1,22 +1,18 @@
 import yfinance as yf
 import os
 
-# -----------------------------
-# USER CONFIGURATION
-# -----------------------------
-symbols = ["AAPL", "MSFT"]  # Apple and Microsoft
-folder = "data"             # Folder to save CSVs
+# Create data folder if it doesn't exist
+os.makedirs("data", exist_ok=True)
 
-# Ensure the folder exists
-os.makedirs(folder, exist_ok=True)
+# List of stock symbols
+stocks = ["AAPL", "MSFT"]
 
-# -----------------------------
-# DOWNLOAD AND SAVE STOCK DATA
-# -----------------------------
-for symbol in symbols:
+for symbol in stocks:
     print(f"Downloading data for {symbol}...")
     df = yf.download(symbol, period="max", auto_adjust=True)
     df.reset_index(inplace=True)
-    csv_file = os.path.join(folder, f"{symbol.lower()}_stock.csv")
-    df.to_csv(csv_file, index=False)
-    print(f"✅ Saved {csv_file}")
+
+    # Save CSV in data folder
+    filename = f"data/{symbol.lower()}_stock.csv"
+    df.to_csv(filename, index=False, float_format="%.2f")
+    print(f"✅ Saved {filename}")
