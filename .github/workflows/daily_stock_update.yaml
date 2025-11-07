@@ -2,11 +2,8 @@ name: Daily Stock Update
 
 on:
   schedule:
-    - cron: '0 8 * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
+    - cron: '0 8 * * *'   # Runs daily at 08:00 UTC
+  workflow_dispatch:       # Allows manual trigger
 
 jobs:
   update-stock-data:
@@ -29,6 +26,3 @@ jobs:
 
       - name: Run Python script
         run: python stocks.py
-
-      - name: Commit and push updated CSV files
-        env:
