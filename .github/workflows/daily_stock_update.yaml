@@ -2,8 +2,8 @@ name: Daily Stock Update
 
 on:
   schedule:
-    - cron: '0 8 * * *'
-  workflow_dispatch:
+    - cron: '0 8 * * *' # Runs daily at 08:00 UTC
+  workflow_dispatch:     # Allows manual trigger
 
 jobs:
   update-stock-data:
