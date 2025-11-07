@@ -1,18 +1,22 @@
 import yfinance as yf
-import pandas as pd
+import os
 
-# List of tickers
-tickers = ["AAPL", "MSFT"]
+# -----------------------------
+# USER CONFIGURATION
+# -----------------------------
+symbols = ["AAPL", "MSFT"]  # Apple and Microsoft
+folder = "data"             # Folder to save CSVs
 
-for symbol in tickers:
+# Ensure the folder exists
+os.makedirs(folder, exist_ok=True)
+
+# -----------------------------
+# DOWNLOAD AND SAVE STOCK DATA
+# -----------------------------
+for symbol in symbols:
     print(f"Downloading data for {symbol}...")
-    
-    # Download maximum historical data
     df = yf.download(symbol, period="max", auto_adjust=True)
     df.reset_index(inplace=True)
-    df = df.round(2)
-
-    # Save CSV in the repo root
-    filename = f"{symbol.lower()}_stock.csv"
-    df.to_csv(filename, index=False)
-    print(f"✅ Saved {filename}")
+    csv_file = os.path.join(folder, f"{symbol.lower()}_stock.csv")
+    df.to_csv(csv_file, index=False)
+    print(f"✅ Saved {csv_file}")
