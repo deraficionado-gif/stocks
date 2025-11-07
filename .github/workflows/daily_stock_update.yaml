@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 8 * * *'   # Runs daily at 08:00 UTC
   workflow_dispatch:       # Allows manual trigger
+  push:                    # Optional: run on push to main
+    branches:
+      - main
 
 jobs:
   update-stock-data:
@@ -26,3 +29,11 @@ jobs:
 
       - name: Run Python script
         run: python stocks.py
+
+      - name: Commit and push CSV files
+        run: |
+          git config --local user.name "github-actions"
+          git config --local user.email "actions@github.com"
+          git add '*.csv'
+          git commit -m "Update stock CSVs" || echo "No changes to commit"
+          git push
